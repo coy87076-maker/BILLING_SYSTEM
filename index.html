@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Bill</title>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-green: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            padding: 14px;
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px -2px rgba(79, 70, 229, 0.3);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result h2 {
+            font-size: 20px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .highlight {
+            color: var(--accent-green) !important;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            text-align: right;
+        }
+
+        .note {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="title">Water Billing Statement</h1>
+
+    <form id="billingForm">
+        <input type="text" id="customerName" name="username" placeholder="Customer Name" required>
+        <input type="number" id="consumption" name="consumption" placeholder="Water Consumption Cubic Meter" required>
+        
+        <select id="status" name="status">
+            <option value="Regular">Regular</option>
+            <option value="Senior">Senior Citizen</option>
+            <option value="Solo">Solo Parent</option>
+        </select>
+
+        <button type="submit">Generate Bill</button>
+    </form>
+
+    <div class="result" id="output">
+        <h2>Bill Summary</h2>
+    </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsGtjOKxb7XAENDFkW3_be0MX0KXtVsWWgCmAxNTdUoI9mb_BfbVCOousrMf8JpXCI/exec';
+const form = document.getElementById('billingForm');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+   
+    let name = document.getElementById("customerName").value;
+    let consumption = parseFloat(document.getElementById("consumption").value);
+    let status = document.getElementById("status").value;
+
+   
+    let rate = 0;
+    if (consumption >= 40) {
+        rate = 45;
+    } else if (consumption >= 20) {
+        rate = 35;
+    } else {
+        rate = 25; 
+    }
+
+   
+    let discountPercent = 0;
+    if (status === "Senior") {
+        discountPercent = 0.25;
+    } else if (status === "Solo") {
+        discountPercent = 0.15;
+    }
+
+
+    let grossAmount = consumption * rate;
+    let discountAmount = grossAmount * discountPercent;
+    let totalBill = grossAmount - discountAmount;
+
+
+    document.querySelector("#title").textContent = "Bill Successfully Computed";
+
+    let inputs = document.querySelectorAll("input");
+    inputs.forEach(box => {
+        box.style.background = "#ffffdd";
+    });
+
+    let result = document.getElementsByClassName("result")[0];
+    result.innerHTML = ""; 
+
+    let heading = document.createElement("h2");
+    heading.textContent = "Water Billing Receipt";
+    heading.setAttribute("class", "highlight");
+    result.appendChild(heading);
+
+    let table = document.createElement("table");
+    table.innerHTML = `
+        <tr><th>Description</th><th>Value</th></tr>
+        <tr><td>Customer Name</td><td>${name}</td></tr>
+        <tr><td>Customer Type</td><td>${status}</td></tr>
+        <tr><td>Water Usage</td><td>${consumption}</td></tr>
+        <tr><td>Rate per m³</td><td>₱${rate.toFixed(2)}</td></tr>
+        <tr><td>Amount</td><td>₱${grossAmount.toFixed(2)}</td></tr>
+        <tr><td>Discount</td><td>₱${discountAmount.toFixed(2)}</td></tr>
+        <tr><td><strong>TOTAL BILL</strong></td><td><strong>₱${totalBill.toFixed(2)}</strong></td></tr>
+    `;
+    result.appendChild(table);
+
+  
+    let cells = document.getElementsByTagName("tr");
+    for (let i = 0; i < cells.length; i++) {
+        if (i % 2 === 1) {
+            cells[i].style.fontWeight = "bold";
+        }
+    }
+
+    let note = document.createElement("p");
+    note.textContent = "Statement generated and transmitted successfully.";
+    note.setAttribute("class", "note");
+    result.appendChild(note);
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: new FormData(form),
+        mode: 'no-cors'
+    });
+
+    form.reset();
+});
+</script>
+
+</body>
+</html>
