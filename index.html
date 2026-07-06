@@ -163,7 +163,7 @@
 
     <form id="billingForm">
         <input type="text" id="customerName" name="username" placeholder="Customer Name" required>
-        <input type="number" id="consumption" name="age" placeholder="Water Consumption Cubic Meter" required>
+        <input type="number" id="consumption" name="consumption" placeholder="Water Consumption Cubic Meter" required>
         
         <select id="status" name="status">
             <option value="Regular">Regular</option>
@@ -180,28 +180,28 @@
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYEHQ24O3EeJtBIfDnnJ2r9UQ-UaYqX1BzjiFaLaMpFWnEJqMqz-eyaTtmhH_7Z8Nm/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsGtjOKxb7XAENDFkW3_be0MX0KXtVsWWgCmAxNTdUoI9mb_BfbVCOousrMf8JpXCI/exec';
 const form = document.getElementById('billingForm');
 
 form.addEventListener('submit', function(e) {
-    e.preventDefault(); // Stop standard form reload
+    e.preventDefault(); 
 
-    // 1. DOM Access Methods
+   
     let name = document.getElementById("customerName").value;
     let consumption = parseFloat(document.getElementById("consumption").value);
     let status = document.getElementById("status").value;
 
-    // 2. Control Structure: Consumption Rate Logic (Top down from highest tier)
+   
     let rate = 0;
     if (consumption >= 40) {
         rate = 45;
     } else if (consumption >= 20) {
         rate = 35;
     } else {
-        rate = 25; // Base tier for under 20 cubic meters
+        rate = 25; 
     }
 
-    // 3. Control Structure: Discount Calculations
+   
     let discountPercent = 0;
     if (status === "Senior") {
         discountPercent = 0.25;
@@ -209,12 +209,12 @@ form.addEventListener('submit', function(e) {
         discountPercent = 0.15;
     }
 
-    // 4. Mathematical Calculations (Executed AFTER variables are established)
+
     let grossAmount = consumption * rate;
     let discountAmount = grossAmount * discountPercent;
     let totalBill = grossAmount - discountAmount;
 
-    // 5. Advanced DOM Manipulations
+
     document.querySelector("#title").textContent = "Bill Successfully Computed";
 
     let inputs = document.querySelectorAll("input");
@@ -223,9 +223,8 @@ form.addEventListener('submit', function(e) {
     });
 
     let result = document.getElementsByClassName("result")[0];
-    result.innerHTML = ""; // Wipe dynamic content area clean
+    result.innerHTML = ""; 
 
-    // Dynamic Element Creation & Insertion
     let heading = document.createElement("h2");
     heading.textContent = "Water Billing Receipt";
     heading.setAttribute("class", "highlight");
@@ -243,7 +242,7 @@ form.addEventListener('submit', function(e) {
     `;
     result.appendChild(table);
 
-    // Advanced Loop DOM access manipulation
+  
     let cells = document.getElementsByTagName("tr");
     for (let i = 0; i < cells.length; i++) {
         if (i % 2 === 1) {
@@ -256,7 +255,6 @@ form.addEventListener('submit', function(e) {
     note.setAttribute("class", "note");
     result.appendChild(note);
 
-    // 6. Send directly to Apps Script URL
     fetch(SCRIPT_URL, {
         method: 'POST',
         body: new FormData(form),
