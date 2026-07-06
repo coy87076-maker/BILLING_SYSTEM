@@ -1,101 +1,325 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Simple Google Form</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
-    }
-    form {
-      background: #fff;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    fieldset {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #218838;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Bill</title>
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --accent-green: #10b981;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.container{
+    width: 100%;
+    max-width: 650px;
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+h1{
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-main);
+    transition: color 0.3s ease;
+}
+
+/* Form group wraps to give spacing since there are no labels */
+input, select {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text-main);
+    outline: none;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+input::placeholder {
+    color: var(--text-muted);
+}
+
+button{
+    padding: 14px;
+    width: 100%;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+button:hover{
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -2px rgba(79, 70, 229, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.result{
+    margin-top: 30px;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.result h2 {
+    font-size: 20px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.highlight{
+    color: var(--accent-green) !important;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+th, td{
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+td {
+    font-size: 14px;
+    color: #334155;
+}
+
+/* Align values neatly to the right side of the table */
+th:nth-child(2), td:nth-child(2) {
+    text-align: right;
+}
+
+.note {
+    margin-top: 15px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+}
+</style>
+
 </head>
 <body>
 
-<form id="googleForm">
-  <label for="name">Name</label>
-  <input type="text" name="name" id="name" required>
+<div class="container">
 
-  <label for="gender">Gender</label>
-  <select name="gender" id="gender">
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
-  </select>
+<h1 id="title">Water Billing Statement</h1>
 
-  <fieldset>
-    <legend>Age Group</legend>
-    <label><input type="radio" name="ageGroup" value="Under 18"> Under 18</label>
-    <label><input type="radio" name="ageGroup" value="18-30"> 18-30</label>
-    <label><input type="radio" name="ageGroup" value="31-50"> 31-50</label>
-    <label><input type="radio" name="ageGroup" value="51+"> 51+</label>
-  </fieldset>
+<input type="text" id="customerName" placeholder="Customer Name">
 
-  <label for="comments">Comments</label>
-  <textarea name="comments" id="comments" rows="4"></textarea>
+<input type="number" id="consumption" placeholder="Water Consumption Cubic Meter">
 
-  <button type="submit">Submit</button>
-</form>
+<select id="status">
+    <option value="Regular">Regular</option>
+    <option value="Senior">Senior Citizen</option>
+    <option value="Solo">Solo Parent</option>
+</select>
+
+<button onclick="computeBill()">Generate Bill</button>
+
+<div class="result" id="output">
+    <h2>Bill Summary</h2>
+</div>
+
+</div>
 
 <script>
+const SCRIPT_URL = (`https://script.google.com/macros/s/AKfycbyYEHQ24O3EeJtBIfDnnJ2r9UQ-UaYqX1BzjiFaLaMpFWnEJqMqz-eyaTtmhH_7Z8Nm/exec`);
 
-// the address which you will attach here will be generated in the Google Apps Script
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbwlS6XdqLy3gsGKpJPwH8vr3A0xhwocH_oZp-XgdGNulYXldTKFsOccprrVkEJjoCmDiw/exec';
-  const form = document.getElementById('googleForm');
 
-//When the user clicks the submit button, this function runs.
-  form.addEventListener('submit', e => {
-    e.preventDefault(); //This stops the browser’s default action of reloading 
-    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-      .then(response => {
-        alert("Form submitted successfully!");
-        form.reset();
-      })
-      .catch(error => alert('Error!', error.message));
-  });
+function computeBill(){
+
+// getElementById()
+let name=document.getElementById("customerName").value;
+let consumption=document.getElementById("consumption").value;
+let status=document.getElementById("status").value;
+
+// Validation
+if(name=="" || consumption==""){
+    alert("Complete all fields.");
+    return;
+}
+
+let total = consumption - discount;
+let ammount = consumtion * rate;
+let discountrate = consumtion * discount;
+//Consumption
+
+let rate=0;
+if(consumption<=20)
+    rate=25;
+else if(gross>=20)
+    rate=35;
+else if(gross>=40)
+    rate=45;
+else
+    rate=60
+
+// Discount
+
+let discount=0;
+if(status=="Senior")
+    discount=0.25;
+else if(status=="Solo")
+    allowance=0.15;
+else
+    allowance=0;
+
+
+// querySelector()
+document.querySelector("#title").textContent="Bill Successfully Computed";
+
+// querySelectorAll()
+let inputs=document.querySelectorAll("input");
+inputs.forEach(function(box){
+    box.style.background="#ffffdd";
+});
+
+// getElementsByClassName()
+let result=document.getElementsByClassName("result")[0];
+
+// innerHTML
+result.innerHTML="";
+
+// createElement()
+let heading=document.createElement("h2");
+heading.textContent="Employee Payroll";
+heading.setAttribute("class","highlight");
+
+// appendChild()
+result.appendChild(heading);
+
+// create Table
+let table=document.createElement("table");
+table.innerHTML=`
+<tr>
+<th>Description</th>
+<th>Value</th>
+</tr>
+
+<tr>
+<td>Customer Name</td>
+<td>${customerName}</td>
+</tr>
+
+<tr>
+<td>Customer Type</td>
+<td>${status}</td>
+</tr>
+
+<tr>
+<td>Rate</td>
+<td>₱${rate}</td>
+</tr>
+
+<tr>
+<td>Ammount</td>
+<td>${ammount}</td>
+</tr>
+
+<tr>
+<td>Dicsount</td>
+<td>₱${discountrate.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>TOTAL BILL</td>
+<td>₱${total.toFixed(2)}</td>
+</tr>
+`;
+
+result.appendChild(table);
+
+// getElementsByTagName()
+let cells=document.getElementsByTagName("tr");
+for(let i=0;i<cells.length;i++){
+    if(i%2==1){
+        cells[i].style.fontWeight="bold";
+    }
+}
+
+// removeChild()
+let oldParagraph=document.querySelector(".note");
+if(oldParagraph!=null){
+    result.removeChild(oldParagraph);
+}
+
+// createElement()
+let note=document.createElement("p");
+note.textContent="Payroll generated successfully.";
+note.setAttribute("class","note");
+result.appendChild(note);
+
+}
 </script>
 
 </body>
 </html>
-
